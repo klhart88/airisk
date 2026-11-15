@@ -34,7 +34,7 @@
             "anthropic-version": "2023-06-01",
             "anthropic-dangerous-direct-browser-access": "true"
           },
-          body: JSON.stringify({ model: s.model, max_tokens: maxTokens || 400, system, messages, stream: true })
+          body: JSON.stringify({ model: s.model, max_tokens: maxTokens || 2048, system, messages, stream: true })
         });
       } catch (e) {
         if (e.name === "AbortError") throw e;
@@ -48,6 +48,7 @@
       const reader = res.body.getReader();
       const dec = new TextDecoder();
       let buf = "", text = "";
+      AIProvider.lastStopReason = null;
       for (;;) {
         const { value, done } = await reader.read();
         if (done) break;
@@ -59,6 +60,8 @@
           let ev; try { ev = JSON.parse(line.slice(5)); } catch (e) { continue; }
           if (ev.type === "content_block_delta" && ev.delta && ev.delta.type === "text_delta") {
             text += ev.delta.text; if (onText) onText(text);
+          } else if (ev.type === "message_delta" && ev.delta && ev.delta.stop_reason) {
+            AIProvider.lastStopReason = ev.delta.stop_reason;
           } else if (ev.type === "error") {
             throw friendly("STREAM", ev.error && ev.error.message);
           }

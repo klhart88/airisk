@@ -1,6 +1,6 @@
 /* Offline support: serve the app shell from cache, refresh it in the background.
    Bump VERSION whenever you deploy changed files. Supabase requests are never cached. */
-const VERSION = "airisk-v2";
+const VERSION = "airisk-v3";
 const SHELL = [
   "./", "index.html", "css/app.css", "js/config.js", "js/vendor/supabase.js",
   "js/content.js", "js/store.js", "js/app.js", "manifest.webmanifest",

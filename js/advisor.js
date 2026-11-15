@@ -139,12 +139,16 @@
       const text = await AI.stream({
         system: SYSTEM,
         messages: [{ role: "user", content: q }],
-        maxTokens: 400,
+        maxTokens: 2048, // headroom: newer models may think before answering, and thinking counts toward this limit
         signal: controller.signal,
         onText: t => { lastAnswer = t; const el = $("#qra-answer-text"); if (el) el.textContent = t; }
       });
       lastAnswer = text.trim();
       busy = false;
+      if (AI.lastStopReason === "max_tokens") {
+        lastAnswer += " \u2026";
+        errorMsg = "The answer was cut short by the length limit. Ask again, or switch to the other model in settings.";
+      }
       if (lastAnswer) {
         const at = new Date().toISOString();
         Records.set("qra:" + Date.now(), { q, a: lastAnswer, at, model: AI.settings().model });
