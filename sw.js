@@ -1,10 +1,11 @@
 /* Offline support: serve the app shell from cache, refresh it in the background.
    Bump VERSION whenever you deploy changed files. Supabase requests are never cached. */
-const VERSION = "airisk-v1";
+const VERSION = "airisk-v2";
 const SHELL = [
   "./", "index.html", "css/app.css", "js/config.js", "js/vendor/supabase.js",
   "js/content.js", "js/store.js", "js/app.js", "manifest.webmanifest",
-  "icons/icon-192.png", "icons/icon-512.png", "icons/apple-touch-icon.png"
+  "icons/icon-192.png", "icons/icon-512.png", "icons/apple-touch-icon.png",
+  "advisor.html", "advisor.webmanifest", "css/advisor.css", "js/ai-provider.js", "js/advisor.js"
 ];
 self.addEventListener("install", e => {
   e.waitUntil(caches.open(VERSION).then(c => c.addAll(SHELL)).then(() => self.skipWaiting()));

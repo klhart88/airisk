@@ -66,6 +66,7 @@
     { r: "roadmap", label: "Roadmap", icon: "M4 5h16M4 12h16M4 19h10" },
     { r: "review", label: "Review", icon: "M4 12a8 8 0 1 0 2.3-5.6M4 4v4h4" },
     { r: "competency", label: "Competency", icon: "M5 20V10M12 20V4M19 20v-7" },
+    { href: "advisor.html", label: "Advisor", icon: "M4 5h16v11H9l-5 4z" },
     { r: "settings", label: "Settings", icon: "M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z" }
   ];
   function route() { const h = location.hash.replace(/^#\/?/, ""); return h.split("/"); }
@@ -74,7 +75,7 @@
     const cur = route()[0] === "week" ? "roadmap" : route()[0];
     const due = dueReviews().length;
     $("#nav").innerHTML = NAV.map(n => `
-      <a href="#/${n.r}" class="${cur === n.r ? "active" : ""}" aria-label="${n.label}">
+      <a href="${n.href || "#/" + n.r}" class="${!n.href && cur === n.r ? "active" : ""}" aria-label="${n.label}">
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="${n.icon}"/></svg>
         <span>${n.label}</span>${n.r === "review" && due ? `<b class="badge">${due}</b>` : ""}
       </a>`).join("");
@@ -396,10 +397,16 @@
         <p id="bk-msg" class="small"></p>
       </section>
       <section class="card">
+        <h2>Quick Response Advisor</h2>
+        <p class="small">Ask a question by voice and get a short answer you can say aloud. Your API key is stored only on each device; saved questions sync with your account.</p>
+        <a class="btn small" href="advisor.html">Open the Advisor</a>
+        <p class="muted small">Tip: on your iPhone, open the Advisor in Safari and use Share › Add to Home Screen to give it its own icon.</p>
+      </section>
+      <section class="card">
         <h2>Coming next</h2>
         <ul class="small">
           <li><b>Phase 2:</b> portfolio templates (Artifacts 1–6), AI dependency inventory, capstone workspace, Word and Excel exports.</li>
-          <li><b>Phase 3:</b> guided learning assistant and the Quick Response Advisor (uses your own API key, stored only on this device).</li>
+          <li><b>Phase 3 (remaining):</b> guided learning assistant for readings, self-checks and teach-backs.</li>
         </ul>
       </section>
       <p class="muted small center">${esc(P.version)}</p>`;

@@ -2,7 +2,7 @@
    Source: Program Design Plan v0.3. Edit here to change what the app shows. */
 window.PROGRAM = {
   title: "AI Risk Competency Program",
-  version: "Plan v0.3 · App Phase 1",
+  version: "Plan v0.3 · App Phase 1 + Advisor",
 
   sessions: [
     { n: 1, name: "Learn", time: "60 min", what: "10-minute spaced review of an earlier week, then the core reading" },

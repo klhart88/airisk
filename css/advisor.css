@@ -1,0 +1,32 @@
+/* Quick Response Advisor: one quiet screen, works one-handed on a phone. */
+body.qra main { max-width: 640px; padding-bottom: calc(32px + var(--safe-b)); }
+.qra-tabs { display: flex; gap: 4px; }
+.qra-tabs button { font: inherit; font-size: .85rem; color: #fff; background: transparent; border: 0; padding: 6px 10px; border-radius: 8px; cursor: pointer; opacity: .75; }
+.qra-tabs button.active { background: rgba(255, 255, 255, .16); opacity: 1; font-weight: 600; }
+
+.qra-q textarea { font-size: 17px; min-height: 84px; }
+.qra-controls { display: flex; gap: 10px; align-items: center; }
+.qra-controls .btn { min-height: 48px; }
+.qra-rec {
+  flex: 1; display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+  min-height: 56px; border-radius: 14px; border: 0; cursor: pointer;
+  font: inherit; font-size: 1.05rem; font-weight: 700; color: #fff; background: var(--navy);
+}
+.qra-rec span { width: 14px; height: 14px; border-radius: 50%; background: #e57a6a; }
+.qra-rec.on { background: var(--bad); }
+.qra-rec.on span { background: #fff; border-radius: 3px; animation: qra-pulse 1.2s ease-in-out infinite; }
+@keyframes qra-pulse { 50% { opacity: .35; } }
+@media (prefers-reduced-motion: reduce) { .qra-rec.on span { animation: none; } }
+.qra-status { margin: 10px 0 2px; font-size: .88rem; color: var(--muted); min-height: 1.3em; }
+.qra-note { margin: 0 0 12px; font-size: .78rem; color: var(--muted); }
+.qra-error { background: color-mix(in srgb, var(--bad) 12%, transparent); color: var(--bad); border-radius: 10px; padding: 10px 12px; margin: 0 0 12px; font-size: .92rem; }
+.qra-answer { background: var(--card); border: 1px solid var(--line); border-left: 4px solid var(--accent); border-radius: var(--radius); padding: 14px 16px; box-shadow: var(--shadow); }
+.qra-answer.empty { display: none; }
+#qra-answer-text { font-size: 1.12rem; line-height: 1.55; white-space: pre-wrap; min-height: 1.5em; }
+.qra-label { margin: 12px 0 0; font-size: .74rem; color: var(--muted); }
+
+.qra-item summary { display: flex; flex-direction: column; gap: 2px; color: var(--ink); font-weight: 400; list-style: none; }
+.qra-item summary::-webkit-details-marker { display: none; }
+.qra-item-q { font-weight: 600; }
+.qra-tags select { flex: 1; min-width: 140px; margin: 0; }
+.qra-item .row { margin-top: 8px; }

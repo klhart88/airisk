@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Advisor</title>
+  <meta name="theme-color" content="#14324a">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Advisor">
+  <link rel="manifest" href="advisor.webmanifest">
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+  <link rel="icon" href="icons/icon-192.png">
+  <link rel="stylesheet" href="css/app.css">
+  <link rel="stylesheet" href="css/advisor.css">
+</head>
+<body class="qra">
+  <header class="top">
+    <span class="brand"><span class="mark" aria-hidden="true"></span>Advisor</span>
+    <nav class="qra-tabs" aria-label="Advisor">
+      <button data-view="ask" class="active">Ask</button>
+      <button data-view="history">History</button>
+      <button data-view="settings" aria-label="Settings">&#9881;</button>
+    </nav>
+  </header>
+  <main id="qra-main"></main>
+
+  <script src="js/config.js"></script>
+  <script src="js/vendor/supabase.js"></script>
+  <script src="js/content.js"></script>
+  <script src="js/store.js"></script>
+  <script src="js/ai-provider.js"></script>
+  <script src="js/advisor.js"></script>
+</body>
+</html>

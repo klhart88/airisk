@@ -1,4 +1,4 @@
-# AI Risk Competency — Phase 1 (learning tracker)
+# AI Risk Competency — Phase 1 + Quick Response Advisor
 
 A personal web app for the 8-week Enterprise AI Risk, Governance & Audit Readiness program.
 Phase 1 covers the learning side: weekly objectives, readings, self-checks, "explain it" and
@@ -73,11 +73,29 @@ merges a backup back in (newer entries win). Keep a backup after each week.
 ## Updating the app later
 
 After you upload changed files, open `sw.js` and change `VERSION` (for example to `airisk-v2`)
-so devices pick up the new version. Devices update on the next open after that.
+so devices pick up the new version. (This update already sets it to `airisk-v2`.) Devices update on the next open after that.
+
+## Quick Response Advisor (`advisor.html`)
+
+A separate one-screen page for in-the-moment questions: tap **Record**, ask, tap again to stop,
+and a short answer in the voice of an AI Governance & Risk Manager streams in. Typing works too.
+
+- **API key:** on first open, enter your Claude API key. It's saved only in that browser on that
+  device and sent only to Anthropic. It never syncs; enter it once per device. Remove it any time
+  from the gear icon.
+- **Model:** Claude Sonnet 5.5 by default; Claude Haiku 5.5 is faster. You can enter another model ID.
+- **History:** every answer is saved and syncs with your account. Search, edit, delete, tag to a
+  week or competency, or add an entry to the review queue.
+- **Voice** uses the browser's built-in speech recognition (Chrome, Edge, Safari on iPhone).
+  It needs the https site and microphone permission. If voice doesn't start from the home-screen
+  icon on iPhone, open the Advisor in Safari instead.
+- **iPhone icon:** open `https://<your site>/advisor.html` in Safari, then Share > Add to Home Screen.
+- **Standalone later:** `advisor.html` + `js/ai-provider.js` + `js/advisor.js` + the CSS files run
+  without the rest of the app (history then stays on the device). For a Copilot-approved model,
+  replace `js/ai-provider.js` only.
 
 ## What's next
 
 - **Phase 2:** portfolio templates for Artifacts 1–6, AI dependency inventory, capstone workspace,
   Word and Excel exports.
-- **Phase 3:** guided learning assistant and the Quick Response Advisor (your own API key, stored
-  only on the device; built as a separate module so it can later become a standalone HTML file).
+- **Phase 3 (remaining):** guided learning assistant for readings, self-checks and teach-backs.
