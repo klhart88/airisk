@@ -142,3 +142,20 @@ ul.hist li { margin-bottom: 8px; }
 .model { background: var(--accent-soft); border-radius: 8px; padding: 10px 12px; margin: 0 0 8px; font-size: .94rem; }
 .prompt { font-weight: 600; }
 .qa-review .q { font-weight: 600; }
+
+/* Key concepts and reference readings */
+.concepts { border-left: 4px solid var(--navy); }
+.concepts summary { list-style: none; display: flex; align-items: center; gap: 8px; }
+.concepts summary::-webkit-details-marker { display: none; }
+.concepts summary h2 { margin: 0; }
+.concepts summary::after { content: "Hide"; margin-left: auto; font-size: .8rem; color: var(--accent); font-weight: 600; }
+.concepts details:not([open]) summary::after { content: "Show"; }
+.concepts h3, .reading h2, .reading h3 { margin: 1.1em 0 .4em; }
+.concepts ul, .concepts ol, .reading ul, .reading ol { padding-left: 22px; margin: .3em 0 .8em; }
+.concepts li, .reading li { margin: 0 0 4px; }
+.reading h1 { margin-top: 0; }
+.tablewrap { overflow-x: auto; margin: .4em 0 1em; -webkit-overflow-scrolling: touch; }
+.tablewrap table { border-collapse: collapse; width: 100%; font-size: .9rem; }
+.tablewrap table.wide { min-width: 560px; }
+.tablewrap th, .tablewrap td { border-bottom: 1px solid var(--line); padding: 7px 8px; text-align: left; vertical-align: top; }
+.tablewrap th { background: var(--accent-soft); font-weight: 650; }

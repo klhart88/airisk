@@ -21,7 +21,47 @@
     const h = Math.round(m / 60); if (h < 24) return h + " h ago";
     return fmtDate(s);
   }
-  function link(r) { return r.u ? `<a href="${esc(r.u)}" target="_blank" rel="noopener">${esc(r.t)}</a>` : esc(r.t); }
+  function link(r) {
+    if (r.ref) return `<a href="#/ref/${esc(r.ref)}">${esc(r.t)}</a>`;
+    return r.u ? `<a href="${esc(r.u)}" target="_blank" rel="noopener">${esc(r.t)}</a>` : esc(r.t);
+  }
+  /* Minimal markdown: ##/### headings, paragraphs, - bullets, 1. lists (4-space nesting), tables, **bold** */
+  function md(src) {
+    const inline = t => esc(t).replace(/\*\*(.+?)\*\*/g, "<b>$1</b>");
+    const lines = String(src || "").replace(/^\n+/, "").split("\n");
+    let html = "", i = 0;
+    const isList = l => /^\s*(- |\d+\. )/.test(l);
+    while (i < lines.length) {
+      const l = lines[i];
+      if (!l.trim()) { i++; continue; }
+      if (l.startsWith("### ")) { html += `<h3>${inline(l.slice(4))}</h3>`; i++; continue; }
+      if (l.startsWith("## ")) { html += `<h2>${inline(l.slice(3))}</h2>`; i++; continue; }
+      if (l.startsWith("|")) {
+        const rows = []; while (i < lines.length && lines[i].startsWith("|")) rows.push(lines[i++]);
+        const cells = r => r.trim().replace(/^\||\|$/g, "").split("|").map(c => c.trim());
+        const body = rows.filter((r, k) => !(k === 1 && /^\|[\s:|-]+\|$/.test(r.trim())));
+        html += `<div class="tablewrap"><table class="${cells(body[0]).length >= 4 ? "wide" : ""}"><thead><tr>${cells(body[0]).map(c => `<th>${inline(c)}</th>`).join("")}</tr></thead><tbody>${body.slice(1).map(r => `<tr>${cells(r).map(c => `<td>${inline(c)}</td>`).join("")}</tr>`).join("")}</tbody></table></div>`;
+        continue;
+      }
+      if (isList(l)) {
+        const block = []; while (i < lines.length && isList(lines[i])) block.push(lines[i++]);
+        const build = items => {
+          const ordered = /^\d+\. /.test(items[0].trim());
+          let out = ordered ? "<ol>" : "<ul>", k = 0;
+          while (k < items.length) {
+            const text = items[k].trim().replace(/^(- |\d+\. )/, ""); k++;
+            const kids = []; while (k < items.length && /^\s{4,}/.test(items[k])) kids.push(items[k++].replace(/^\s{4}/, ""));
+            out += `<li>${inline(text)}${kids.length ? build(kids) : ""}</li>`;
+          }
+          return out + (ordered ? "</ol>" : "</ul>");
+        };
+        html += build(block); continue;
+      }
+      const para = []; while (i < lines.length && lines[i].trim() && !/^(#{2,3} |\|)/.test(lines[i]) && !isList(lines[i])) para.push(lines[i++]);
+      html += `<p>${inline(para.join(" "))}</p>`;
+    }
+    return html;
+  }
   function slug(s) { return s.replace(/[^a-z0-9]+/gi, "-").toLowerCase().slice(0, 40); }
 
   /* ---------- data accessors ---------- */
@@ -72,7 +112,7 @@
   function route() { const h = location.hash.replace(/^#\/?/, ""); return h.split("/"); }
 
   function renderNav() {
-    const cur = route()[0] === "week" ? "roadmap" : route()[0];
+    const cur = route()[0] === "week" || route()[0] === "ref" ? "roadmap" : route()[0];
     const due = dueReviews().length;
     $("#nav").innerHTML = NAV.map(n => `
       <a href="${n.href || "#/" + n.r}" class="${!n.href && cur === n.r ? "active" : ""}" aria-label="${n.label}">
@@ -98,6 +138,7 @@
     window.scrollTo(0, 0);
     if (r === "roadmap") renderRoadmap();
     else if (r === "week") renderWeek(parseInt(a, 10) || 1);
+    else if (r === "ref") renderRef(a);
     else if (r === "review") renderReview();
     else if (r === "competency") renderCompetency();
     else if (r === "settings") renderSettings();
@@ -160,6 +201,7 @@
     view().innerHTML = `
       <h1>Roadmap</h1>
       <p class="muted">Eight weeks, 3–4 hours each. Understanding comes first; the portfolio proves it.</p>
+      <a class="card" href="#/ref"><div class="eyebrow">Reference</div><h3>Reference readings</h3><p class="muted small">Model, LLM and MCP server · Providers, models and hidden AI dependencies · Assessment toolkit</p></a>
       ${P.weeks.map(w => { const p = weekProgress(w); return `
         <a class="card weekcard ${w.n === cw ? "current" : ""}" href="#/week/${w.n}">
           <div class="row"><span class="eyebrow">Week ${w.n}${w.n === cw ? " · this week" : ""}</span><span class="muted">${p.done}/${p.total}</span></div>
@@ -167,6 +209,22 @@
           <p class="muted small">${esc(w.deliverable)}</p>
           ${bar(p.done, p.total)}
         </a>`; }).join("")}`;
+  }
+
+  /* ---------- Reference ---------- */
+  function renderRef(id) {
+    const R = (window.LEARNING && window.LEARNING.references) || {};
+    const doc = R[id];
+    if (!doc) {
+      view().innerHTML = `<h1>Reference</h1><p class="muted">Readings adapted from the program's research, used alongside the weekly core readings.</p>
+        ${Object.entries(R).map(([k, d]) => `<a class="card" href="#/ref/${k}"><h3>${esc(d.title)}</h3><p class="muted small">${esc(d.source)}</p></a>`).join("")}`;
+      return;
+    }
+    const usedIn = P.weeks.filter(w => ["core", "against", "extension"].some(g => (w.readings[g] || []).some(r => r.ref === id))).map(w => w.n);
+    view().innerHTML = `
+      <div class="crumbs"><a href="#/ref">Reference</a> › ${esc(doc.title)}</div>
+      <article class="card reading"><h1>${esc(doc.title)}</h1><p class="muted small">${esc(doc.source)}</p>${md(doc.body)}</article>
+      <div class="row gap">${usedIn.map(n => `<a class="btn small" href="#/week/${n}">Back to Week ${n}</a>`).join("")}</div>`;
   }
 
   /* ---------- Week ---------- */
@@ -181,7 +239,7 @@
     const promptLabel = w.prompt.type === "teachback" ? `Teach-back ${w.prompt.n} of 3` : "Explain it";
 
     const readingGroup = (key, label, items) => items && items.length ? `
-      <h4>${label}</h4><ul class="checks">${items.map((r, i) => { const id = key + i; return `
+      <h4>${label}</h4><ul class="checks">${items.map((r, i) => { const id = key + ":" + slug(r.t); return `
         <li><label><input type="checkbox" data-reading="${id}" ${rd[id] ? "checked" : ""}> <span>${link(r)}</span></label></li>`; }).join("")}</ul>` : "";
 
     view().innerHTML = `
@@ -201,6 +259,12 @@
 
       ${w.scenario ? `<section class="card"><h2>Capstone scenario</h2><p>${esc(w.scenario)}</p><h4>Complications to work through</h4><ol>${w.complications.map(c => `<li>${esc(c)}</li>`).join("")}</ol></section>` : ""}
 
+      ${window.LEARNING && window.LEARNING.concepts[w.n] ? `<section class="card concepts">
+        <details ${d.conceptsClosed ? "" : "open"} data-concepts><summary><h2>Key concepts</h2></summary>
+          <p class="muted small">The essentials for this week. Every self-check question draws on this section or the core reading.</p>
+          ${md(window.LEARNING.concepts[w.n])}
+        </details></section>` : ""}
+
       <section class="card">
         <h2>Session 1 — Learn</h2>
         ${w.spacedReview ? `<div class="callout"><b>Spaced review (10 min):</b> ${esc(w.spacedReview)}</div>` : `<div class="callout">No earlier week to review yet. Start with the core reading.</div>`}
@@ -213,7 +277,7 @@
       <section class="card">
         <h2>Session 2 — Understand</h2>
         <h3>Self-check</h3>
-        <p class="muted small">Answer from memory first, then compare. Anything you mark “Missed” goes to your review queue for next week.</p>
+        <p class="muted small">Answer from memory first (Key concepts covers every question), then compare. Anything you mark “Missed” goes to your review queue for next week.</p>
         ${w.selfCheck.map((q, i) => { const res = sc.results[i]; const shown = sc.shown && sc.shown[i]; return `
           <div class="qa ${res || ""}" data-q="${i}">
             <p class="q"><b>${i + 1}.</b> ${esc(q.q)}</p>
@@ -275,6 +339,7 @@
       keepScroll(() => renderWeek(w.n)); renderNav();
     }));
     $$("[data-manual]", root).forEach(el => el.addEventListener("change", () => { saveWeek(w.n, { [el.dataset.manual]: el.checked }); }));
+    const cc = $("[data-concepts]", root); if (cc) cc.addEventListener("toggle", () => saveWeek(w.n, { conceptsClosed: !cc.open }));
   }
   function scOf(n) { const s = weekData(n).sc || {}; return { answers: Object.assign({}, s.answers), results: Object.assign({}, s.results), shown: Object.assign({}, s.shown) }; }
   function keepScroll(fn) { const y = window.scrollY; fn(); window.scrollTo(0, y); }
@@ -445,7 +510,7 @@
   });
   function renderBody() {
     const [r, a] = route();
-    if (r === "roadmap") renderRoadmap(); else if (r === "week") renderWeek(parseInt(a, 10) || 1);
+    if (r === "roadmap") renderRoadmap(); else if (r === "week") renderWeek(parseInt(a, 10) || 1); else if (r === "ref") { renderNav(); return; }
     else if (r === "review") renderReview(); else if (r === "competency") renderCompetency();
     else if (r === "settings") renderSettings(); else renderHome();
     renderNav();

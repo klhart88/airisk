@@ -2,7 +2,7 @@
    Source: Program Design Plan v0.3. Edit here to change what the app shows. */
 window.PROGRAM = {
   title: "AI Risk Competency Program",
-  version: "Plan v0.3 · App Phase 1 + Advisor",
+  version: "Plan v0.3 · App Phase 1 + Advisor · learning content v2",
 
   sessions: [
     { n: 1, name: "Learn", time: "60 min", what: "10-minute spaced review of an earlier week, then the core reading" },
@@ -53,10 +53,12 @@ window.PROGRAM = {
       ],
       readings: {
         core: [
+          { t: "Reference: Model, LLM and MCP server (start here)", ref: "models-llm-mcp" },
+          { t: "Reference: Providers, models and hidden AI dependencies — sections 1–3", ref: "ai-dependencies" },
           { t: "MCP Security Best Practices — purpose, scope and attack overview", u: "https://modelcontextprotocol.io/specification/latest/basic/security_best_practices" },
           { t: "NIST AI RMF 1.0, Part 1 (framing AI risk)", u: "https://www.nist.gov/itl/ai-risk-management-framework" }
         ],
-        against: [ { t: "Project research: More Risk Assessment Considerations — model vs. LLM vs. MCP" } ],
+        against: [],
         extension: [ { t: "OWASP Top 10 for LLM Applications 2026 — introduction", u: "https://genai.owasp.org/llm-top-10/" } ]
       },
       selfCheck: [
@@ -92,7 +94,7 @@ window.PROGRAM = {
           { t: "NIST AI RMF 1.0, Part 2 — the Core (GOVERN, MAP, MEASURE, MANAGE)", u: "https://www.nist.gov/itl/ai-risk-management-framework" },
           { t: "AI RMF Playbook — GOVERN 6 entries", u: "https://airc.nist.gov/AI_RMF_Knowledge_Base/Playbook" }
         ],
-        against: [ { t: "Project research: Understanding AI Models — GOVERN 6 discussion" } ],
+        against: [ { t: "Reference: Providers, models and hidden AI dependencies — section 6 (where GOVERN 6 fits)", ref: "ai-dependencies" } ],
         extension: [ { t: "NIST AI 600-1 (Generative AI Profile) — third-party and value-chain sections", u: "https://www.nist.gov/itl/ai-risk-management-framework" } ]
       },
       selfCheck: [
@@ -131,7 +133,7 @@ window.PROGRAM = {
           { t: "OWASP Top 10 for LLM Applications 2026 — sensitive information disclosure, supply chain, excessive agency", u: "https://genai.owasp.org/llm-top-10/" },
           { t: "NIST AI 600-1 — generative AI risk list", u: "https://www.nist.gov/itl/ai-risk-management-framework" }
         ],
-        against: [ { t: "Project research: Understanding AI Models — dependency assessment questions" } ],
+        against: [ { t: "Reference: Providers, models and hidden AI dependencies — sections 3–4 (conflicting models, dependency questions)", ref: "ai-dependencies" } ],
         extension: [
           { t: "MCP Security Best Practices — token passthrough and confused-deputy attacks", u: "https://modelcontextprotocol.io/specification/latest/basic/security_best_practices" },
           { t: "OWASP Top 10 for Agentic Applications" }
@@ -171,9 +173,10 @@ window.PROGRAM = {
         core: [
           { t: "ISO/IEC 42001 overview", u: "https://www.iso.org/standard/42001" },
           { t: "NIST AI RMF — GOVERN function (re-read for governance structure)", u: "https://www.nist.gov/itl/ai-risk-management-framework" },
-          { t: "IAPP AIGP Body of Knowledge v2.1 — Domain I", u: "https://iapp.org/certify/free-study-guides" }
+          { t: "IAPP AIGP Body of Knowledge v2.1 — Domain I", u: "https://iapp.org/certify/free-study-guides" },
+          { t: "Reference: Providers, models and hidden AI dependencies — sections 5–6 (approval scenarios, governance fit)", ref: "ai-dependencies" }
         ],
-        against: [ { t: "Project research: Understanding AI Models — approval scenarios A–C" } ],
+        against: [],
         extension: [
           { t: "ISACA AI resources", u: "https://www.isaca.org/resources/artificial-intelligence" },
           { t: "IIA AI Auditing Framework (IIA members only)", u: "https://www.theiia.org/en/resources/knowledge-centers/artificial-intelligence" }
@@ -213,7 +216,7 @@ window.PROGRAM = {
           { t: "ISACA IT Audit Framework (ITAF), 5th ed. — AI/ML guidance (free with registration)", u: "https://www.isaca.org/resources/it-audit" },
           { t: "ISACA Audit Practitioner's Guide to Machine Learning, Part 1", u: "https://www.isaca.org/about-us/newsroom/press-releases/2022/new-isaca-publications-highlight-machine-learning-technology-and-compliance-risk-for-auditors" }
         ],
-        against: [ { t: "Project research: More Risk Assessment Considerations — vendor disclosure questions" } ],
+        against: [ { t: "Reference: Assessment toolkit — vendor disclosure questionnaire", ref: "toolkit" } ],
         extension: [
           { t: "ISACA Auditing Artificial Intelligence (2018, background only)", u: "https://www.isaca.org/resources/white-papers/auditing-artificial-intelligence" },
           { t: "IIA AI Auditing Framework (IIA members only)", u: "https://www.theiia.org/en/resources/knowledge-centers/artificial-intelligence" }
@@ -253,7 +256,7 @@ window.PROGRAM = {
           { t: "EU AI Act FAQ", u: "https://digital-strategy.ec.europa.eu/en/faqs/navigating-ai-act" },
           { t: "IAPP AIGP Body of Knowledge v2.1 — Domain II", u: "https://iapp.org/certify/free-study-guides" }
         ],
-        against: [ { t: "Plan Section 1 — concern C8 (sensitive data in third-party AI)" } ],
+        against: [ { t: "Reference: Providers, models and hidden AI dependencies — section 4 (data transmission, retention, training)", ref: "ai-dependencies" } ],
         extension: [ { t: "ISACA Audit Practitioner's Guide to Machine Learning, Part 2 (compliance risk)", u: "https://www.isaca.org/about-us/newsroom/press-releases/2022/new-isaca-publications-highlight-machine-learning-technology-and-compliance-risk-for-auditors" } ]
       },
       selfCheck: [
@@ -294,9 +297,12 @@ window.PROGRAM = {
       readings: {
         core: [
           { t: "AI RMF Playbook — MAP entries on third-party components", u: "https://airc.nist.gov/AI_RMF_Knowledge_Base/Playbook" },
-          { t: "Plan Appendices A–C (questionnaire, approval scenarios, risk patterns)" }
+          { t: "Reference: Assessment toolkit (questionnaire, approval scenarios, risk patterns)", ref: "toolkit" }
         ],
-        against: [ { t: "Both project research documents, in full" } ],
+        against: [
+          { t: "Reference: Model, LLM and MCP server", ref: "models-llm-mcp" },
+          { t: "Reference: Providers, models and hidden AI dependencies", ref: "ai-dependencies" }
+        ],
         extension: [ { t: "OWASP and MCP readings, re-read against the scenario" } ]
       },
       selfCheck: [
